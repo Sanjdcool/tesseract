@@ -1,0 +1,57 @@
+# File: ocr_invoice_tool.py
+
+import pytesseract
+from PIL import Image
+import os
+
+# Ensure pytesseract points to the Tesseract-OCR executable
+# Update the path below to where tesseract is installed on your system
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+def extract_text_from_image(image_path):
+    """
+    Extract text from the given image using OCR.
+    
+    :param image_path: Path to the image file
+    :return: Extracted text
+    """
+    if not os.path.exists(image_path):
+        raise FileNotFoundError(f"The file {image_path} does not exist.")
+    
+    try:
+        # Open the image
+        image = Image.open(image_path)
+        # Perform OCR
+        text = pytesseract.image_to_string(image)
+        return text
+    except Exception as e:
+        raise RuntimeError(f"Failed to process the image: {str(e)}")
+
+def save_extracted_text(text, output_path):
+    """
+    Save extracted text to a file.
+    
+    :param text: Extracted text
+    :param output_path: Path to save the text file
+    """
+    try:
+        with open(output_path, 'w', encoding='utf-8') as file:
+            file.write(text)
+    except Exception as e:
+        raise RuntimeError(f"Failed to save text to {output_path}: {str(e)}")
+
+if __name__ == "__main__":
+    # Example usage
+    image_path = "invoice_sample.png"  # Replace with your invoice image path
+    output_path = "extracted_text.txt"
+    
+    try:
+        print(f"Processing the image: {image_path}")
+        extracted_text = extract_text_from_image(image_path)
+        print("Extracted Text:")
+        print(extracted_text)
+        
+        save_extracted_text(extracted_text, output_path)
+        print(f"Extracted text has been saved to {output_path}")
+    except Exception as error:
+        print(f"An error occurred: {error}")
