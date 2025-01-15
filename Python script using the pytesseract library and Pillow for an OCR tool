@@ -1,4 +1,4 @@
-# File: ocr_invoice_tool.py
+# File: ocr_invoice_tool.pya
 
 import pytesseract
 from PIL import Image
